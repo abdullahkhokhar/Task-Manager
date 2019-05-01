@@ -12,7 +12,12 @@ loadEventListners();
 function loadEventListners(){
   // add events to tasks
   form.addEventListener('submit', addTask);
-
+  // will use event delegation and add an event listner to the ul itself
+  taskList.addEventListener('click', removeTask);
+  // clear ALL Tasks
+  clearBtn.addEventListener('click', removeAll);
+  // Filter through the task events
+  filter.addEventListener('keyup', filterTasks);
 }
 
 // add task function
@@ -39,8 +44,33 @@ function addTask(e){
   taskList.appendChild(li);
   // Clear input
   taskInput.value = '';
-
-
-
   e.preventDefault();
+}
+
+function removeTask(){
+  if(e.target.parentElement.classList.contains('delete-item')){
+    if(confirm('Are you sure you want to delete?')){
+      e.target.parentElement.parentElement.remove();
+    }
+  }
+}
+
+function removeAll(){
+  while(taskList.firstChild){ // while still something in the list
+    taskList.removeChild(taskList.firstChild); // remove first while there still is one
+  }
+}
+
+function filterTasks(e){
+  const input =  e.target.value.toLowerCase();
+  document.querySelectorAll('.collection-item').forEach(function(task){
+    const item = task.firstChild.textContent;
+    if(item.toLowerCase().indexOf(input) != -1){
+      task.style.display = 'block';
+    }else{
+      task.style.display = 'none';
+    }
+  });  // query selector all returns a node list so can use for each
+
+
 }
